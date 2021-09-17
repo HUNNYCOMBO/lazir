@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset='utf-8'>
+    <title>lazir</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+</head>
+<body class="bg-light"> <!-- 배경 색 변경-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#" th:href=@{/}>lazir이미지</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <ul class="navbar-nav mr-auto">
+            <li class="navbar navbar-dark bg-dark">
+                <form class="form-inline", th:action="@{/search/team}" method="GET">
+                  <input class="form-control mr-sm-2" type="search" placeholder="팀 찾기" aria-label="Search">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+            <li class="nav=item">
+                <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
+            </li>
+            <li>
+                <a class="nav-link" href="#" th:href="@{/sign-up}">회원가입</a>
+            </li>
+        </ul>
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="py-5 text-center">
+           <h2>계정 만들기</h2>
+        </div>
+        <div class="row justify-content-center">
+            <form class="needs-validation col-sm-6"
+            th:action="@{/sign-up}" th:object="${Account}" method="POST" novalidate>    <!-- 요구사항필요, account 객체를 사용해서 담음-->
+                <div class="form-group">
+                  <label for="exampleInputEmail1">이메일</label>
+                  <input id="email" th:field="*{email}" type="email" class="form-control" aria-describedby="emailHelp" required placeholder="your@email.com">
+                  <small id="emailHelp" class="form-text text-muted">테스트단계로 정보는 저장되지 않습니다.</small>
+                  <small class="invalid-feedback">이메일을 입력하세요.</small>
+                  <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</small>
+                </div>
+                <div class="form-group">
+                    <label for="nickname">닉네임</label>
+                    <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
+                    placeholder="nickname" aria-describedby="nicknameHelp" required minlength="3" maxlength="10">
+                    <small id="nicknameHelp" class="form-text text-muted">
+                    공백없이 문자와 숫자로만 3자 이상 10자 이내로 입력하세요. 가입후에 변경할 수 있습니다.</small>
+                    <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">비밀번호</label>
+                  <input id="password" th:field="*{password}" type="password" class="form-control" required minlength="6" maxlength="20" placeholder="We don't save your password">
+                  <small id="passwordHelp" class="form-text text-muted">공백없이 영어와 숫자로만 6자이상 20자 이내로 입력하세요.</small>
+                  <small class="invalid-feedback">패스워드를 입력하세요.</small>
+                  <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
+                </div>
+                <button type="submit" class="btn btn-primary">가입하기</button>
+              </form>
+        </div>
+      </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    <script type="application/javascript">
+        (function () {
+        'use strict';
+
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+
+            // Loop over them and prevent submission
+            //TODO 스크립트 부분은 공부해야함. 우선은 클론코딩으로 해결.
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+    }())
+    </script>
+</body>
+</html>

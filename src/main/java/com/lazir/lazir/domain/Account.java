@@ -14,8 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +27,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Data
+@Data       //setter, getter 만들어 줌
 @EqualsAndHashCode(of = "id") // 아이디만 사용한다.
 @Builder
 @AllArgsConstructor
@@ -37,12 +41,20 @@ public class Account {
     private Long id;
 
     @Column(unique = true, nullable = false, length = 50)
+    @Email
+    @NotBlank
     private String email;
 
     @Column(unique = true, nullable = false, length = 30)
+    @NotBlank
+    @Length(min = 3, max = 10)
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-](3,10)$")
     private String nickname;
 
     @Column(unique = true, nullable = false)
+    @NotBlank
+    @Length(min = 6, max = 20)
+    @Pattern(regexp = "^[a-z0-9](6,20)$")
     private String password; // TODO 해싱처리 해야함
 
     private String emailCheckToken; // 이메일 인증을 위한 토큰
@@ -51,8 +63,6 @@ public class Account {
 
     @CreationTimestamp
     private Timestamp createDate; // 회원가입 날짜 localdatetime보다 sql에 어울릴 듯하다.
-
-    private Timestamp updateDate;
 
     private String profileline; // 자기소개
 
