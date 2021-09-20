@@ -36,12 +36,12 @@
            <h2>계정 만들기</h2>
         </div>
         <div class="row justify-content-center">
-            <form class="needs-validation col-sm-6"
-            th:action="@{/sign-up}" th:object="${Account}" method="POST" novalidate>    <!-- 요구사항필요, account 객체를 사용해서 담음-->
+            <form class="col-sm-6"
+            th:action="@{/sign-up}" th:object="${accountForm}" method="POST">    <!-- 요구사항필요, account 객체를 사용해서 담음-->
                 <div class="form-group">
                   <label for="exampleInputEmail1">이메일</label>
                   <input id="email" th:field="*{email}" type="email" class="form-control" aria-describedby="emailHelp" required placeholder="your@email.com">
-                  <small id="emailHelp" class="form-text text-muted">테스트단계로 정보는 저장되지 않습니다.</small>
+                  <small id="emailHelp" class="form-text text-muted">입력한 정보는 저장되지 않습니다.</small>
                   <small class="invalid-feedback">이메일을 입력하세요.</small>
                   <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</small>
                 </div>
@@ -57,11 +57,17 @@
                 <div class="form-group">
                   <label for="exampleInputPassword1">비밀번호</label>
                   <input id="password" th:field="*{password}" type="password" class="form-control" required minlength="6" maxlength="20" placeholder="We don't save your password">
-                  <small id="passwordHelp" class="form-text text-muted">공백없이 영어와 숫자로만 6자이상 20자 이내로 입력하세요.</small>
+                  <small id="passwordHelp" class="form-text text-muted">공백없이 영어,숫자로 6자이상 20자 이내로 입력하세요. </small>
                   <small class="invalid-feedback">패스워드를 입력하세요.</small>
                   <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
                 </div>
-                <button type="submit" class="btn btn-primary">가입하기</button>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">비밀번호 확인</label>
+                  <input type="password" id="passwordCheck" class="form-control" required minlength="6" maxlength="20" placeholder="Rewrite password">
+                  <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+                  <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submit">가입하기</button>
               </form>
         </div>
       </div>
@@ -69,27 +75,27 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-    <script type="application/javascript">
-        (function () {
-        'use strict';
-
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-
-            // Loop over them and prevent submission
-            //TODO 스크립트 부분은 공부해야함. 우선은 클론코딩으로 해결.
-            Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        }, false)
-    }())
+    <script type="text/javascript">
+      $(function(){
+        $("#alert-success").hide();
+        $("#alert-danger").hide();
+        $("input").keyup(function(){
+          var password=$("#password").val();
+          var passwordCheck=$("#passwordCheck").val();
+          if(password !="" || passwordCheck != ""){
+            if(password == passwordCheck){
+              $("#alert-success").show();
+              $("#alert-danger").hide();
+              $("#submit").removeAttr("disabled");
+            }else{
+              $("#alert-success").hide();
+              $("#alert-danger").show();
+              $("#submit").attr("disabled","disabled");
+            }
+          }
+        })
+      }
+      )
     </script>
 </body>
 </html>
