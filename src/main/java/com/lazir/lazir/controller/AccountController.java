@@ -3,7 +3,6 @@ package com.lazir.lazir.controller;
 import javax.validation.Valid;
 
 import com.lazir.lazir.domain.Account;
-import com.lazir.lazir.domain.Role;
 import com.lazir.lazir.form.AccountForm;
 import com.lazir.lazir.repository.AccountRepository;
 import com.lazir.lazir.service.AccountService;
@@ -52,8 +51,8 @@ public class AccountController {
             return "account/sign-up";
         }
 
-        accountService.checkEmail(accountForm);
-
+        Account account = accountService.checkEmail(accountForm);
+        accountService.login(account);  //회원가입 후 자동 로그인
         return "redirect:/";
     }
     
@@ -72,6 +71,7 @@ public class AccountController {
         }
 
         accountService.setAccountLevel(account);
+        accountService.login(account);      //이메일 확인 후 자동 로그인
         model.addAttribute("nickname", account.getNickname());
 
         return view;

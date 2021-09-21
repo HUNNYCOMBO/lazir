@@ -1,7 +1,5 @@
 package com.lazir.lazir.form;
 
-import java.util.UUID;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -17,7 +15,7 @@ public class AccountForm {
     private String email;
 
     @NotBlank
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9]{3,10}$")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9]{3,10}$")
     @Length(min = 3, max = 10)
     private String nickname;
 
@@ -28,7 +26,7 @@ public class AccountForm {
 
     private String emailCheckToken;
 
-    public void generateEmailCheckToken() {
-        this.emailCheckToken = UUID.randomUUID().toString();
-    }
+    // public void generateEmailCheckToken() {
+    //     this.emailCheckToken = UUID.randomUUID().toString();
+    // }
 }
