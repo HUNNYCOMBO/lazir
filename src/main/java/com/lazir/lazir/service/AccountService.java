@@ -1,9 +1,12 @@
 package com.lazir.lazir.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.lazir.lazir.config.PrincipalDetail;
 import com.lazir.lazir.domain.Account;
 import com.lazir.lazir.domain.Role;
 import com.lazir.lazir.form.AccountForm;
@@ -12,6 +15,7 @@ import com.lazir.lazir.repository.AccountRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,18 +45,19 @@ public class AccountService {
         .teamJoinNotcie(false)
         .build();
         
-        generateEmailCheckToken(account);
         account.setRole(Role.ASSOCIATE);
-
+        
         return accountRepository.save(account); //여기까지 persist상태
     }
-
-    private void sendSignUpEmail(Account newAccount){
+    
+    public void sendSignUpEmail(Account account){
+        generateEmailCheckToken(account);
+        account.setCreateTokenTime(LocalDateTime.now());
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(newAccount.getEmail());
+        simpleMailMessage.setTo(account.getEmail());
         simpleMailMessage.setSubject("lazir 회원가입 인증");
-        simpleMailMessage.setText("/check-email?token=" + newAccount.getEmailCheckToken() + 
-        "&email=" + newAccount.getEmail());
+        simpleMailMessage.setText("/check-email-token?token=" + account.getEmailCheckToken() + 
+        "&email=" + account.getEmail());
         javaMailSender.send(simpleMailMessage);
     }
 
@@ -64,14 +69,21 @@ public class AccountService {
     }
 
 
+    @Transactional
     public void setAccountLevel(Account account){
         account.setRole(Role.REGULAR);
     }
 
     public void login(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken
-            (account.getEmail(), account.getPassword());  //principal, password, 권한 
-        
+            (new PrincipalDetail(account),
+            account.getPassword(),
+            List.of(new SimpleGrantedAuthority("ROLE_"+account.getRole())));  //principal로 user를 상속받은 객체를 사용, password, 권한 
         SecurityContextHolder.getContext().setAuthentication(token);
+        //AuthenticationManager와 하는 일이 같아짐.
+    }
+
+    public boolean sendEmailColl(Account account){
+        return account.getCreateTokenTime().isBefore(LocalDateTime.now().minusMinutes(1));
     }
 }

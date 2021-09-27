@@ -25,8 +25,4 @@ public class AccountForm {
     private String password;
 
     private String emailCheckToken;
-
-    // public void generateEmailCheckToken() {
-    //     this.emailCheckToken = UUID.randomUUID().toString();
-    // }
 }

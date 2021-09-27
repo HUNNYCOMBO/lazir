@@ -2,6 +2,7 @@ package com.lazir.lazir.controller;
 
 import javax.validation.Valid;
 
+import com.lazir.lazir.config.Principal;
 import com.lazir.lazir.domain.Account;
 import com.lazir.lazir.form.AccountForm;
 import com.lazir.lazir.repository.AccountRepository;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @Controller //HTML 파일을 리턴함
 @RequiredArgsConstructor
 public class AccountController {
@@ -28,7 +32,7 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
 
-    @InitBinder("AccountForm")  //AccountForm요청이 들어올때 binder를 거치게된다.
+    @InitBinder("accountForm")  //AccountForm요청이 들어올때 binder를 거치게된다.
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(AccountValidator);
     }
@@ -45,7 +49,7 @@ public class AccountController {
     //검증해야할 다수의 객체가 있을땐 modelattribute
     //vaild처리를 해줄 Errors 클래스.
 
-    @PostMapping(value="/sign-up")
+    @PostMapping("/sign-up")
     public String signUpSubmit(@ModelAttribute @Valid AccountForm accountForm, Errors errors) {
         if(errors.hasErrors()){
             return "account/sign-up";
@@ -56,7 +60,7 @@ public class AccountController {
         return "redirect:/";
     }
     
-    @GetMapping("/check-email")
+    @GetMapping("/check-email-token")
     public String checkEmail(String token, String email, Model model){
         Account account = accountRepository.findByEmail(email);
         String view = "account/checked-email";
@@ -75,5 +79,40 @@ public class AccountController {
         model.addAttribute("nickname", account.getNickname());
 
         return view;
+    }
+
+    @GetMapping("/check-email")
+    public String checkEmail(@Principal Account account, Model model){
+        //pricipal객체의 필드에 email이없어서 값이 넘어가지 않았다.
+        model.addAttribute("email", account.getEmail());
+        //UserPrincipal객체의 필드 email을 가져옴.
+        return "account/check-email";
+    }
+
+    @GetMapping("/resend-email")
+    public String resendEmail(@Principal Account account, Model model){
+        //db에는 cratetokendate가 반영되지않지만 persist상태이기에 작동하는것인듯.
+        if(!accountService.sendEmailColl(account)){
+           model.addAttribute("error", "인증 메일은 1분에 한번 전송할 수 있습니다.");
+           model.addAttribute("email", account.getEmail());
+           return "account/check-email";
+        }
+        
+        //중복요청 방지 redirect
+        accountService.sendSignUpEmail(account);
+        return "redirect:/";
+    }
+
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname, Model model, @Principal Account account){
+        Account owner = accountRepository.findByNickname(nickname);
+        if(owner == null){
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+
+        model.addAttribute("account", owner);
+        model.addAttribute("owner", owner.equals(account));
+        log.info("모델정보"+model.toString());
+        return "account/profile";
     }
 }

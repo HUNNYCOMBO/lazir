@@ -14,7 +14,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -41,7 +40,6 @@ public class Board {
     @Lob
     private String content;
 
-    @ColumnDefault("0")
     private Long count;
 
     @CreationTimestamp
@@ -54,6 +52,5 @@ public class Board {
     private Account account;        //조인테이블. 어카운트 1 : 게시판 N
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER)  //Reply.java의 Board 변수명. 연관관계의 주인이 아님.
-    private Set<Reply> reply;              //https://joont92.github.io/jpa/%EC%BB%AC%EB%A0%89%EC%85%98%EA%B3%BC-%EB%B6%80%EA%B0%80%EA%B8%B0%EB%8A%A5/
-                                    //set과 list의 차이. equalsandhash 어노테이션과 관련있는데, equals부담을 줄이기 위함.
+    private Set<Reply> reply;       //set과 list의 차이. equalsandhash 어노테이션과 관련있는데, equals부담을 줄이기 위함.
 }
