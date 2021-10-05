@@ -7,6 +7,22 @@
     <div sec:authorize="hasRole('ROLE_ASSOCIATE')" class="alert alert-warning" role="alert">
         회원가입을 완료하려면 <a href="" th:href="@{/check-email}" class="alert-link">인증 이메일</a>을 확인하세요.
     </div>
+    <section class="jumbotron text-center mt-3" th:if="${#authentication.principal.equals('anonymousUser')}">
+        <div class="container">
+            <h1>Gather UP</h1>
+            <p class="lead text-muted">
+               <a th:href="@{/login}">로그인</a> 후 방탈러를 모집해보세요.
+            </p>
+            <p>
+                <a th:href="@{/sign-up}" class="btn btn-primary my-2">회원 가입</a>
+            </p>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row justify-content-center pt-3">
+            <div th:replace="fragments.html :: team-list (teamList=${teamList})"></div>
+        </div>
+    </div>
     <footer th:replace="fragments.html :: footer"></footer>
 </body>
 </html>

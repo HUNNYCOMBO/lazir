@@ -5,9 +5,15 @@ import javax.validation.Valid;
 import com.lazir.lazir.config.Principal;
 import com.lazir.lazir.domain.Account;
 import com.lazir.lazir.form.AccountForm;
+import com.lazir.lazir.form.EmailLogInForm;
+import com.lazir.lazir.form.PasswordForm;
+import com.lazir.lazir.form.ProfileForm;
 import com.lazir.lazir.repository.AccountRepository;
 import com.lazir.lazir.service.AccountService;
 import com.lazir.lazir.validator.AccountValidator;
+import com.lazir.lazir.validator.EmailLogInValidator;
+import com.lazir.lazir.validator.PasswordValidator;
+import com.lazir.lazir.validator.ProfileValidator;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +24,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-
-@Slf4j
 @Controller //HTML 파일을 리턴함
 @RequiredArgsConstructor
 public class AccountController {
@@ -31,10 +35,28 @@ public class AccountController {
     private final AccountValidator AccountValidator;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+    private final ProfileValidator profileValidator;
+    private final PasswordValidator passwordValidator;
+    private final EmailLogInValidator emailValidator;
 
     @InitBinder("accountForm")  //AccountForm요청이 들어올때 binder를 거치게된다.
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initBinderAccount(WebDataBinder webDataBinder){
         webDataBinder.addValidators(AccountValidator);
+    }
+
+    @InitBinder("profileForm")
+    public void initBinderProfile(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(profileValidator);
+    }
+
+    @InitBinder("passwordForm")
+    public void initBinderPassword(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(passwordValidator);
+    }
+
+    @InitBinder("emailLogInForm")
+    public void initBinderemailLogIn(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(emailValidator);
     }
 
     @GetMapping("/sign-up")
@@ -64,13 +86,8 @@ public class AccountController {
     public String checkEmail(String token, String email, Model model){
         Account account = accountRepository.findByEmail(email);
         String view = "account/checked-email";
-        if(account == null){
-            model.addAttribute("error", "wrong.email");
-            return view;
-        }
-
-        if(!account.getEmailCheckToken().equals(token)){
-            model.addAttribute("error", "wrong.token");
+        if(account == null || !account.getEmailCheckToken().equals(token)){
+            model.addAttribute("error", "인증에 실패했습니다.");
             return view;
         }
 
@@ -112,7 +129,104 @@ public class AccountController {
 
         model.addAttribute("account", owner);
         model.addAttribute("owner", owner.equals(account));
-        log.info("모델정보"+model.toString());
         return "account/profile";
+    }
+
+    @GetMapping("/settings/profile")
+    public String profileUpdateForm(@Principal Account account, Model model){
+        model.addAttribute("account", account);
+        model.addAttribute("profileForm", new ProfileForm(account));
+        return "settings/profile";
+    }
+
+    @PostMapping("/settings/profile")
+    public String profileUpdate(@Principal Account account, @Valid ProfileForm profileForm, Errors errors,
+    Model model, RedirectAttributes attributes){
+        if(errors.hasErrors()){
+            //에러는 자동으로담김
+            model.addAttribute("account", account);
+            return "settings/profile";
+        }
+        accountService.updateProfile(account, profileForm);
+        attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
+        return "redirect:/settings/profile";
+    }
+
+    @GetMapping("/settings/password")
+    public String passwordUpdateform(@Principal Account account, Model model){
+        model.addAttribute("account", account);
+        model.addAttribute("passwordForm", new PasswordForm());
+        return "settings/password";
+    }
+
+    @PostMapping("/settings/password")
+    public String passwordUpdate(@Principal Account account, @Valid PasswordForm passwordForm, Errors errors,
+    Model model, RedirectAttributes attributes){
+        if(errors.hasErrors()){
+            model.addAttribute("account", account);
+            return "settings/password";
+        }
+
+        accountService.updatePassword(account, passwordForm);
+        attributes.addFlashAttribute("message", "비밀번호를 변경했습니다.");
+        return "redirect:/settings/password";
+    }
+
+    @PostMapping("/settings/sign-out")
+    public String deleteAccount(@Principal Account account,
+    Model model, RedirectAttributes attributes){
+      
+        accountService.deleteAccount(account);
+        attributes.addFlashAttribute("message", "탈퇴했습니다.");
+        return "redirect:/";
+    }
+
+    @GetMapping("/settings/sign-out")
+    public String deleteAccount(@Principal Account account,
+    Model model){
+    
+        model.addAttribute("account", account);
+        return "settings/sign-out";
+    }
+
+    @GetMapping("/my-team")
+    public String viewMyTeam(@Principal Account account, Model model){
+        if(account != null){
+            model.addAttribute("account", account);
+        }
+        return "account/my-team";
+    }
+
+    @GetMapping("/email-login")
+    public String emailLogInForm(Model model){
+        model.addAttribute("emailLogInForm", new EmailLogInForm());
+        return "account/email-login";
+    }
+
+    @PostMapping("/email-login")
+    public String emailLogIn(@Valid EmailLogInForm emailLogInForm, Errors errors, Model model, RedirectAttributes attributes){
+        if(errors.hasErrors()){
+            return "account/email-login";
+        }
+
+        accountService.sendLogInLink(emailLogInForm.getEmail());
+        attributes.addFlashAttribute("message", "이메일을 보냈습니다. 확인해주세요.");
+        return "redirect:/email-login";
+    }
+
+    @GetMapping("/login-by-email")
+    public String loginByEmail(String token, String email, Model model){
+        Account account = accountRepository.findByEmail(email);
+        String view = "account/checked-email";
+
+        if(account == null || !account.getEmailCheckToken().equals(token)){
+            model.addAttribute("error", "인증에 실패했습니다.");
+            return view;
+        }
+
+        accountService.login(account);      //이메일 확인 후 자동 로그인
+        model.addAttribute("nickname", account.getNickname());
+
+        return view;
     }
 }

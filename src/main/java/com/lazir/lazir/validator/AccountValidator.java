@@ -12,7 +12,7 @@ import org.springframework.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor    //final 생성자를 만들어줌.(반드시 필요한 것)
+@RequiredArgsConstructor
 public class AccountValidator implements Validator{
     
     @Autowired
@@ -29,10 +29,9 @@ public class AccountValidator implements Validator{
         if (accountRepository.existsByEmail(accountform.getEmail())) {
             errors.rejectValue("email", "invalid.email", new Object[]{accountform.getEmail()}, "이미 사용중인 이메일입니다.");
         }
-        //TODO errors 공부
         if (accountRepository.existsByNickname(accountform.getNickname())) {
-            errors.rejectValue("nickname", "invalid.nickname", new Object[]{accountform.getEmail()}, "이미 사용중인 닉네임입니다.");
-        } 
+            errors.rejectValue("nickname", "invalid.nickname", new Object[]{accountform.getNickname()}, "이미 사용중인 닉네임입니다.");
+        }
     }
 
 

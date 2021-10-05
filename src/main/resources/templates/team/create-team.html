@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light"> <!-- 배경 색 변경-->
+  <div th:replace="fragments :: nav"></div>
+
+      <div class="container">
+        <div class="py-5 text-center">
+           <h2>팀 만들기</h2>
+        </div>
+        <div class="row justify-content-center">
+            <form class="col-sm-10"
+            th:action="@{/create-team}" th:object="${teamForm}" method="POST">
+            <div class="form-group row">
+              <div class="col-sm-4">
+                <label for="name">팀 이름</label>
+                <input id="name" type="text" th:field="*{name}" class="form-control" required min="2" max="20">
+                <small class="help">2자-20자 이내로 입력해주세요.</small>
+                <small class="invalid-feedback">2자~20자 이내로 입력하세요. 공백은 허용하지 않습니다.</small>
+              </div>
+              <div class="col-sm-3">
+                <label for="memberLimit">모집인원 수</label>
+                <input id="memberLimit" type="number" th:field="*{memberLimit}" class="form-control" required min="2" max="8">
+                <small class="help">2-8사이의 숫자를 입력해주세요.</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="title">간략한 정보</label>
+              <input id="title" type="text" th:field="*{title}" class="form-control" required min="3" max="40">
+              <small class="invalid-feedback">3자~40자 이내로 입력하세요. 공백은 허용하지 않습니다.</small>
+            </div>
+            <div class="form-group">
+              <label for="context">상세내용</label>
+              <textarea rows="10" id="context" th:field="*{context}" class="form-control"></textarea>
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="published" name="published" th:field="*{published}">
+              <label for="published" class="form-check-label">비공개</label>
+            </div>
+            <br>
+            <input type="hidden" class="form-control" th:field="*{URL}" id="URL">
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('URL')}" th:errors="*{URL}"></small>
+                <button type="submit" class="btn btn-primary" id="submit">팀 모집</button>
+              </form>
+        </div>
+
+        <footer th:replace="fragments.html :: footer"></footer>
+
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+      <script>
+        $('#context').summernote({
+          tabsize: 2,
+          height: 120,
+          toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+          ]
+        });
+      </script>
+</body>
+</html>

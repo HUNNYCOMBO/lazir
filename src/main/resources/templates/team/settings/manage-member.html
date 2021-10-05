@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments.html :: head"></head>
+
+<body class="bg-light">
+  <!-- 배경 색 변경-->
+  <div th:replace="fragments.html :: nav"></div>
+  <div th:replace="fragments.html :: message"></div>
+
+  <div class="container">
+    <div th:replace="fragments.html :: team-info"></div>
+    <div th:replace="team-fragments.html :: team-menu (teamMenu='settings')"></div>
+    <div class="row justify-content-center mt-3">
+    <div class="col-2">
+      <div th:replace="team-fragments.html :: team-settings-menu (currentMenu = 'members')"></div>
+    </div>
+    <div class="col-8">
+      <div class="row">
+        <button class="btn btn-primary btn-sm" style="pointer-events: none;">팀원 목록</button>
+      </div>
+      <div th:replace="team-fragments.html :: manage-member(members=${team.members},isMember=${true})"></div>
+      <hr>
+      <div class="row">
+        <button class="btn btn-secondary btn-sm" style="pointer-events: none;">신청자 목록</button>
+      </div>
+      <div th:replace="team-fragments.html :: manage-member(members=${team.waitting},isMember=${false})"></div>
+    </div>
+</div>
+    <footer th:replace="fragments.html :: footer"></footer>
+
+  </div>
+</body>
+
+</html>

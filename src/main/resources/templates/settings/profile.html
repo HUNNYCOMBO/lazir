@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+    <nav th:replace="fragments.html :: nav"></nav>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-2 mt-4">
+                <div th:replace="fragments.html :: settings-menu(currentMenu='profile')"></div>
+            </div>
+            <div class="col-8">
+                <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                    <span th:text="${message}">메시지</span>
+                </div>
+                <div class="row mt-3">
+                    <form action="#" class="col-sm-6" th:action="@{/settings/profile}" th:object="${profileForm}"
+                        method="POST">
+                        <div class="form-group">
+                            <label for="nickname">닉네임</label>
+                            <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
+                                aria-describedby="nicknameHelp" required minlength="3" maxlength="10">
+                            <small id="nicknameHelp" class="form-text text-muted">
+                                공백없이 문자와 숫자로만 3자 이상 10자 이내로 입력하세요.</small>
+                            <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                            <br>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}"
+                                th:errors="*{nickname}">Nickname Error</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileline">자기소개</label>
+                            <input type="text" id="profileline" th:field="*{profileline}" class="form-control"
+                                aria-describedby="lineHelp">
+                            <small id="lineHelp" class="form-text text-muted">35자 이내로 입력하세요.</small>
+                            <br>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('profileline')}"
+                                th:errors="*{profileline}">
+                                35자를 초과하였습니다.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">활동 지역</label>
+                            <input id="location" type="text" th:field="*{location}" class="form-control"
+                                aria-describedby="locationdHelp">
+                            <small id="locationdHelp" class="form-text text-muted">
+                                주요 활동지역의 도시 이름을 알려주세요.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" th:field="*{email}" class="form-control" id="email">
+                            <button class="btn btn-primary btn-block" type="submit"
+                                aria-describedby="submitHelp">수정하기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <footer th:replace="fragments.html :: footer"></footer>
+</body>
+
+</html>

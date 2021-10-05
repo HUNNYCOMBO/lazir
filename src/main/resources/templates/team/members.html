@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments.html :: head"></head>
+
+<body class="bg-light">
+    <!-- 배경 색 변경-->
+    <div th:replace="fragments.html :: nav"></div>
+    <div th:replace="fragments.html :: message"></div>
+    <div class="container">
+        <div th:replace="fragments.html :: team-info"></div>
+        <div th:replace="team-fragments.html :: team-menu (teamMenu='members')"></div>
+   
+        <div th:replace="team-fragments.html :: member-list(members=${team.manager},isManager=${true})"></div>
+        <div th:replace="team-fragments.html :: member-list(members=${team.members},isManager=${false})"></div>
+    </div>
+    <footer th:replace="fragments.html :: footer"></footer>
+
+</body>
+
+</html>

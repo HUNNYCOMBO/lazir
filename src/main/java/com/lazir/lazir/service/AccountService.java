@@ -9,7 +9,10 @@ import javax.validation.Valid;
 import com.lazir.lazir.config.PrincipalDetail;
 import com.lazir.lazir.domain.Account;
 import com.lazir.lazir.domain.Role;
+import com.lazir.lazir.domain.Team;
 import com.lazir.lazir.form.AccountForm;
+import com.lazir.lazir.form.PasswordForm;
+import com.lazir.lazir.form.ProfileForm;
 import com.lazir.lazir.repository.AccountRepository;
 
 import org.springframework.mail.SimpleMailMessage;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -41,8 +45,8 @@ public class AccountService {
         .nickname(accountForm.getNickname())
         .password(passwordEncoder.encode(accountForm.getPassword()))
         .emailCheckToken(accountForm.getEmailCheckToken())
-        .teamCreatedNotice(false)
-        .teamJoinNotcie(false)
+        // .teamCreatedNotice(false)
+        // .teamJoinNotcie(false)
         .build();
         
         account.setRole(Role.ASSOCIATE);
@@ -53,6 +57,7 @@ public class AccountService {
     public void sendSignUpEmail(Account account){
         generateEmailCheckToken(account);
         account.setCreateTokenTime(LocalDateTime.now());
+        accountRepository.save(account);
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(account.getEmail());
         simpleMailMessage.setSubject("lazir 회원가입 인증");
@@ -85,5 +90,81 @@ public class AccountService {
 
     public boolean sendEmailColl(Account account){
         return account.getCreateTokenTime().isBefore(LocalDateTime.now().minusMinutes(1));
+    }
+
+    public void updateProfile(Account account, @Valid ProfileForm profileForm) {
+        //여기의 account는 principal에서 온 account이기에 persist상태가 아닌, defatched상태
+        if(!account.getNickname().equals(profileForm.getNickname()) && !accountRepository.existsByNickname(profileForm.getNickname())){
+            account.setNickname(profileForm.getNickname());
+        }
+        account.setLocation(profileForm.getLocation());
+        account.setProfileline(profileForm.getProfileline());
+        accountRepository.save(account);
+    }
+
+    public void updatePassword(Account account, @Valid PasswordForm passwordForm) {
+        account.setPassword(passwordEncoder.encode(passwordForm.getPassword()));
+        accountRepository.save(account);
+    }
+
+    public void sendLogInLink(String email) {
+        Account account = accountRepository.findByEmail(email);
+        generateEmailCheckToken(account);
+        account.setCreateTokenTime(LocalDateTime.now());
+        accountRepository.save(account);
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(account.getEmail());
+        simpleMailMessage.setSubject("lazir 이메일으로 로그인하기");
+        simpleMailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() + 
+        "&email=" + account.getEmail());
+        javaMailSender.send(simpleMailMessage);
+    }
+
+    public void deleteAccount(Account account) {
+        accountRepository.delete(account);
+    }
+
+    public void setManager(Account account, Team team) {
+        Account manager = accountRepository.findByEmail(account.getEmail());
+        manager.getManager().add(team);
+        accountRepository.save(manager);
+    }
+
+    public void addWaitting(Account account, Team team) {
+        Account waitting = accountRepository.findByEmail(account.getEmail());
+        waitting.getWaitting().add(team);
+        accountRepository.save(waitting);
+
+    }
+
+    public void removeMember(Account account, Team team) {
+        Account member = accountRepository.findByEmail(account.getEmail());
+        if(account.getWaitting().contains(team)){
+            account.getWaitting().remove(team);
+        }
+        member.getMember().remove(team);
+        accountRepository.save(member);
+    }
+
+    public void removeWaitting(Account account, Team team) {
+        Account waitting = accountRepository.findByEmail(account.getEmail());
+        waitting.getWaitting().remove(team);
+        accountRepository.save(waitting);
+    }
+
+    public void addMember(Account waitter, Team team) {
+        Account waitting = accountRepository.findByEmail(waitter.getEmail());
+        if(waitter.getWaitting().contains(team)){
+            waitter.getWaitting().remove(team);
+        }
+        waitting.getMember().add(team);
+        accountRepository.save(waitting);
+    }
+
+    public void removeManager(Account account, Team team) {
+        Account manager = accountRepository.findByEmail(account.getEmail());
+        manager.getManager().remove(team);
+        manager.getMember().add(team);
+        accountRepository.save(manager);
     }
 }

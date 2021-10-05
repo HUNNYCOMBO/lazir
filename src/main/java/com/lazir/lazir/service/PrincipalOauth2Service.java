@@ -1,5 +1,6 @@
 package com.lazir.lazir.service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.lazir.lazir.config.PrincipalDetail;
@@ -54,6 +55,7 @@ public class PrincipalOauth2Service extends DefaultOAuth2UserService{
             .nickname(username)
             .password(password)
             .provider(username)
+            .createTokenTime(LocalDateTime.now())
             .build();
 
         accountService.setAccountLevel(account);

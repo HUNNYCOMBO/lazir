@@ -2,6 +2,7 @@ package com.lazir.lazir.domain;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -15,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -66,12 +68,23 @@ public class Account {
     @Enumerated(EnumType.STRING)
     public Role role; // 준회원, 정회원, 관리자 구분
 
-    private boolean teamCreatedNotice; // TODO태그에 해당하는 팀 생성 알림
+    // private boolean teamCreatedNotice; // TODO태그에 해당하는 팀 생성 알림
 
-    private boolean teamJoinNotcie; // TODO팀 가입됨 알림
+    // private boolean teamJoinNotcie; // TODO팀 가입됨 알림
 
     @ManyToMany
-    private Set<Tag> tag; 
+    private Set<Team> waitting = new HashSet<>();
+
+    @ManyToMany
+    private Set<Team> member = new HashSet<>();
+
+    @OneToMany
+    private Set<Team> manager = new HashSet<>();
+    
+
+
+    // @ManyToMany
+    // private Set<Tag> tag = new HashSet<>(); 
 
     
 }

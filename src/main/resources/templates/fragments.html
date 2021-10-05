@@ -9,6 +9,7 @@
     integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
@@ -25,59 +26,227 @@
     <a class="navbar-brand" href="#" th:href=@{/}>
       <i class="fab fa-keycdn"></i>&nbsp;HOME&nbsp;
     </a>
-      <ul class="navbar-nav me-md-auto">
-        <li class="nav-item bg-dark">
-          <form class="d-flex" , th:action="@{/search/team}" method="GET">
-            <input class="form-control mr-sm-2" type="search" placeholder="팀 찾기" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+    <ul class="navbar-nav me-md-auto">
+      <li class="nav-item bg-dark">
+        <form class="d-flex" , th:action="@{/search/team}" method="GET">
+          <input class="form-control mr-sm-2" type="search" placeholder="팀 찾기" aria-label="Search">
+          <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" th:href="@{/board}">게시판</a>
+      </li>
+    </ul>
+    <ul class="nav justify-content-end">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
+        <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
+      </li>
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
+        <a class="nav-link" href="#" th:href="@{/sign-up}">회원가입</a>
+      </li>
+      <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link" href="#" th:href="@{/notifications}">
+          <i class="far fa-bell"></i>
+        </a>
+      </li> -->
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link btn btn-group-sm" href="#" th:href="@{/create-team}">
+          <i class="far fa-handshake"></i>&nbsp;팀 만들기</a>
+      </li>
+      <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+        <button class="btn btn-group-sm dropdown-toggle bg-gradient" type="button" id="userdropdown"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <svg width="24" height="24" data-jdenticon-value="icon value"
+            th:data-jdenticon-value="${#authentication.name}" class="rounded border bg-light"></svg>&nbsp;
+          <span sec:authentication="name" style="color: aliceblue;">Username</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="userdropdown">
+          <a class="dropdown-item" href="#" th:href="@{'/profile/' + ${#authentication.name}}">내정보</a>
+          <a class="dropdown-item" href="#" th:href="@{'/my-team'}">내 팀</a>
+          <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+          <hr class="dropdown-divider">
+          <form action="/logout" th:href="@{/logout}" method="POST">
+            <button class="dropdown-item" href="/logout" th:href="@{/logout}" type="submit">로그아웃</button>
           </form>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" th:href="@{/board}">게시판</a>
-        </li>
-      </ul>
-      <ul class="nav justify-content-end">
-        <li class="nav-item" sec:authorize="!isAuthenticated()">
-          <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
-        </li>
-        <li class="nav-item" sec:authorize="!isAuthenticated()">
-          <a class="nav-link" href="#" th:href="@{/sign-up}">회원가입</a>
-        </li>
-        <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link" href="#" th:href="@{/notifications}">
-            <i class="far fa-bell"></i>
-          </a>
-        </li>
-        <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link btn btn-group-sm" href="#" th:href="@{/create-team}">
-            <i class="far fa-handshake"></i>&nbsp;팀 만들기</a>
-        </li>
-        <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-          <button class="btn btn-group-sm dropdown-toggle bg-gradient" type="button" id="userdropdown" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <svg width="24" height="24" data-jdenticon-value="icon value"
-              th:data-jdenticon-value="${#authentication.name}" class="rounded border bg-light"></svg>&nbsp;
-            <span sec:authentication="name" style="color: aliceblue;">Username</span>
-          </button>
-          <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="userdropdown">
-            <a class="dropdown-item" href="#" th:href="@{'/profile/' + ${#authentication.name}}">내정보</a>
-            <a class="dropdown-item" href="#">내 팀</a>
-            <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
-            <hr class="dropdown-divider">
-            <form action="/logout" th:href="@{/logout}" method="POST">
-              <button class="dropdown-item" href="/logout" th:href="@{/logout}" type="submit">로그아웃</button>
-            </form>
-          </div>
-        </li>
-      </ul>
+        </div>
+      </li>
+    </ul>
   </div>
 </nav>
 
 <!-- 푸터 -->
-<footer th:fragments="footer" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-  <div class="col-md-4 d-flex align-items-center">
-    <span class="text-muted">HUNNY</span>
+<footer th:fragments="footer" class="d-flex justify-content-center py-3 my-4 border-top">
+  <div class="col-md-10 d-flex align-items-center">
+    <span class="text-muted">3팀 Gather UP</span>
+    <span class="text-muted">강인호, 라경훈, 이재환</span>
   </div>
 </footer>
+
+<div th:fragment="settings-menu (currentMenu)" class="list-group">
+  <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
+    th:href="@{/settings/profile}">프로필 수정</a>
+  <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#"
+    th:href="@{/settings/password}" th:if="${#strings.isEmpty(account.provider)}">패스워드 변경</a>
+  <!-- <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active" href="#"
+    th:href="@{/settings/notifications}">알림</a>
+  <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#"
+    th:href="@{/settings/tags}">관심 주제</a> -->
+  <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'sign-out'}? active" href="#"
+     th:href="@{/settings/sign-out}">계정 삭제</a>
+</div>
+
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+  <span th:text="${message}">메시지</span>
+</div>
+
+<div th:fragment="team-info">
+  <div class="row pt-4 text-left justify-content-center bg-light">
+    <div class="col-6">
+      <a href="#" class="text-decoration-none" th:href="@{'/team/' + ${team.URL}}">
+        <span class="h2" th:text="${team.name}">팀 이름</span>
+        <span class="badge bg-danger" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="정원"
+          th:text="${'인원 : ' + (team.members.size()+1) +'/'+ team.memberLimit + '인'}">
+        </span>
+        <!-- <span class="badge bg-secondary" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+        title="링크복사" onclick="CopyURL" id="URL">COPY
+      </span> -->
+      </a>
+    </div>
+    <div class="col-4 text-right justify-content-end">
+      <span th:if="${!team.published}" class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+        title="비공개 팀">
+        <button class="btn btn-outline-dark btn-sm" style="pointer-events: none;" type="button"
+          disabled>PRIVATE</button>
+      </span>
+      <span th:if="${team.published}" class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+        title="공개팀">
+        <button class="btn btn-outline-info btn-sm" style="pointer-events: none;" type="button" disabled>PUBLIC</button>
+      </span>
+      <span th:if="${team.closed}" class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+        title="종료된 팀">
+        <button class="btn btn-outline-dark btn-sm" style="pointer-events: none;" type="button" disabled>CLOSED</button>
+      </span>
+      <span th:if="${!team.recruiting}" class="d-inline-block ml-1" tabindex="0" data-toggle="tooltip"
+        data-placement="bottom" title="팀원 모집중 아님">
+        <button class="btn btn-outline-dark btn-sm" style="pointer-events: none;" type="button" disabled>RECRUIT
+          OFF</button>
+      </span>
+      <span th:if="${team.recruiting}" class="d-inline-block ml-1" tabindex="0" data-toggle="tooltip"
+        data-placement="bottom" title="팀원 모집중">
+        <button class="btn btn-outline-info btn-sm" style="pointer-events: none;" type="button"
+          disabled>RECRUITING</button>
+      </span>
+      <span sec:authorize="isAuthenticated()" th:if="${team.isJoinable(#authentication.principal)}" class="btn-group"
+        role="group" aria-label="Basic example">
+        <form class="d-flex" , th:action="@{'/team/' + ${team.URL} + '/join'}" method="POST">
+          <button class="btn btn-primary btn-sm" type="submit">
+            팀 가입신청
+          </button>
+        </form>
+      </span>
+      <span sec:authorize="isAuthenticated()" th:if="${!team.closed && team.isMember(#authentication.principal)}"
+        class="btn-group" role="group">
+        <form class="d-flex" , th:action="@{'/team/' + ${team.URL} + '/leave'}" method="POST">
+          <button class="btn btn-danger btn-sm" type="submit">
+            팀 탈퇴
+          </button>
+        </form>
+      </span>
+      <span sec:authorize="isAuthenticated()"
+        th:if="${!team.closed && !team.isAcceptable() && team.isJoinable(#authentication.principal)}" class="btn-group"
+        role="group">
+        <button class="btn btn-secondary btn-sm" style="pointer-events: none;">
+          정원 초과
+        </button>
+      </span>
+      <span sec:authorize="isAuthenticated()" th:if="${!team.closed && team.isWaitting(#authentication.principal)}"
+        class="btn-group" role="group">
+        <form class="d-flex" , th:action="@{'/team/' + ${team.URL} + '/cancel'}" method="POST">
+          <button class="btn btn-danger btn-sm" type="submit">
+            신청 취소
+          </button>
+        </form>
+      </span>
+      <span sec:authorize="isAuthenticated()" th:if="${!team.closed && team.isManager(#authentication.principal)}"
+        class="btn-group" role="group">
+        <a class="btn btn-warning btn-sm" th:href="@{'/team/' + ${team.URL} + '/settings/members'}">
+          관리자
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center bg-light">
+    <div class="col-10">
+      <p class="lead" th:text="${team.title}"></p>
+    </div>
+  </div>
+  <!-- <script>
+    function CopyURL(){
+      var URL = document.getElementById("URL");
+      URL.value = window.document.location.href;
+      URL.select();
+      document.execCommand("copy");
+      alert("링크가 복사되었습니다.");
+    }
+  </script> -->
+</div>
+
+
+<div th:fragment="team-list (teamList)" class="col-sm-12">
+  <div class="row">
+    <div class="col-md-4" th:each="team: ${teamList}">
+      <div class="card mb-4 shadow-sm">
+        <!-- <img th:src="${team.image}" class="card-img-top" th:alt="${team.name}" > -->
+        <div class="card-body">
+          <a th:href="@{'/team/' + ${team.URL}}" class="text-decoration-none">
+            <h5 class="card-title context" th:text="${team.name}"></h5>
+          </a>
+          <p class="card-text" th:text="${team.title}"></p>
+          <!-- <p class="card-text context">
+                              <span th:each="tag: ${study.tags}" class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+                                  <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">
+                                      <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
+                                  </a>
+                              </span>
+                      <span th:each="zone: ${study.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">
+                                  <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
+                                      <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}" class="text-white">City</span>
+                                  </a>
+                              </span>
+                  </p> -->
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              <i class="fa fa-user-circle"></i>
+              <span th:text="${(team.members.size()+1) +'/'+ team.memberLimit + '인'}"></span>
+            </small>
+            <small class="text-muted date" th:text="${team.createTime}"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="my-team-list (team)" class="row px-3 justify-content-center">
+  <ul class="list-unstyled col-10 row">
+      <li class="media mt-3 col-3" th:each="team: ${teamList}">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-body">
+            <a th:href="@{'/team/' + ${team.URL}}" class="text-decoration-none">
+              <h5 class="card-title context" th:text="${team.name}"></h5>
+            </a>
+            <p class="card-text" th:text="${team.title}"></p>
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                <i class="fa fa-user-circle"></i>
+                <span th:text="${(team.members.size()+1) +'/'+ team.memberLimit + '인'}"></span>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      </li>
+  </ul>
+</div>
 
 </html>

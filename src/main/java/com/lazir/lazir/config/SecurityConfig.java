@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.csrf().disable()
             .authorizeRequests()
             .mvcMatchers("/","/login","/sign-up","/check-email","/check-email",
-                        "/email-login","/check-email-login","/login-link","*")
+                        "/email-login","/check-email-login","/login-link","*","/login-by-email")
             .permitAll()  //인증없이 허용
             .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll() //get요청일때만 허용
             .anyRequest()

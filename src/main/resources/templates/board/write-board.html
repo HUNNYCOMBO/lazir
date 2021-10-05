@@ -5,15 +5,14 @@
 
 <body class="bg-light">
   <!-- 배경 색 변경-->
-  <div th:replace="fragments :: nav"></div>
+  <div th:replace="fragments.html :: nav"></div>
 
   <div class="container">
     <div class="py-5 text-center">
       <h2>글쓰기</h2>
     </div>
     <div class="row justify-content-center">
-      <form class="col-sm-6" th:action="@{/write-board}" th:object="${boardForm}" method="POST">
-        <!-- 요구사항필요, account 객체를 사용해서 담음-->
+      <form class="col-sm-10" th:action="@{/write-board}" th:object="${boardForm}" method="POST">
         <div class="form-group">
           <label for="title">제목</label>
           <input id="title" type="text" th:field="*{title}" class="form-control" required placeholder="title">
@@ -31,5 +30,21 @@
         <footer th:replace="fragments.html :: footer"></footer>
 
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+  <script>
+    $('#content').summernote({
+      tabsize: 2,
+      height: 120,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+      ]
+    });
+  </script>
 </body>
 </html>
