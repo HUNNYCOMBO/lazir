@@ -11,7 +11,6 @@ import com.lazir.lazir.form.TeamForm;
 import com.lazir.lazir.form.TeamModifyForm;
 import com.lazir.lazir.repository.AccountRepository;
 import com.lazir.lazir.repository.TeamRepository;
-import com.lazir.lazir.service.AccountService;
 import com.lazir.lazir.service.TeamService;
 import com.lazir.lazir.validator.TeamModifyValidator;
 import com.lazir.lazir.validator.TeamValidator;
@@ -38,7 +37,6 @@ public class TeamController {
     private final TeamValidator teamValidator;
     private final TeamModifyValidator teamModifyValidator;
     private final AccountRepository accountRepository;
-    private final AccountService accountService;
 
     @InitBinder("teamForm")
     public void initBinderTeam(WebDataBinder webDataBinder) {
@@ -64,7 +62,6 @@ public class TeamController {
             return "team/create-team";
         }
         Team team = service.createNewTeam(account, teamForm);
-        accountService.setManager(account, team);
         return "redirect:/team/" + URLEncoder.encode(team.getURL(), StandardCharset.UTF_8);
     }
 
@@ -128,7 +125,6 @@ public class TeamController {
             throw new IllegalArgumentException("해당 경로가 존재하지 않습니다.");
         }
         service.addWatting(account, team);
-        accountService.addWaitting(account, team);
         attributes.addFlashAttribute("message", "참가신청을 보냈습니다.");
         return "redirect:/team/" + url;
     }
@@ -141,7 +137,6 @@ public class TeamController {
             throw new IllegalArgumentException("해당 경로가 존재하지 않습니다.");
         }
         service.removeMember(account, team);
-        accountService.removeMember(account, team);
         attributes.addFlashAttribute("message", "팀을 떠났습니다.");
         return "redirect:/team/" + url;
     }
@@ -153,8 +148,7 @@ public class TeamController {
         if (team == null) {
             throw new IllegalArgumentException("해당 경로가 존재하지 않습니다.");
         }
-        service.removeMember(account, team);
-        accountService.removeWaitting(account ,team);
+        service.removeWaitter(account, team);
         attributes.addFlashAttribute("message", "신청을 취소했습니다.");
         return "redirect:/team/" + url;
     }
@@ -172,7 +166,6 @@ public class TeamController {
             return "redirect:/team/" + url + "/settings/manage-member";
         }
         service.addMember(waitter, team);
-        accountService.addMember(waitter, team);
         attributes.addFlashAttribute("message", waitter.getNickname() + "님이 팀에 합류했습니다.");
         return "redirect:/team/" + url + "/settings/manage-member";
     }
@@ -187,7 +180,6 @@ public class TeamController {
         }
 
         service.removeWaitter(waitter, team);
-        accountService.removeWaitting(waitter, team);
         attributes.addFlashAttribute("message", waitter.getNickname() + "님을 거절했습니다.");
         return "redirect:/team/" + url + "/settings/manage-member";
     }
@@ -202,8 +194,6 @@ public class TeamController {
         }
 
         service.transferManager(member, team, account);
-        accountService.setManager(member, team);
-        accountService.removeManager(account, team);
         attributes.addFlashAttribute("message", member.getNickname() + "님에게 권한을 넘겼습니다.");
         return "redirect:/team/" + url + "/members";
     }
@@ -218,7 +208,6 @@ public class TeamController {
         }
 
         service.removeMember(member, team);
-        accountService.removeManager(member, team);
         attributes.addFlashAttribute("message", member.getNickname() + "님을 내쫓았습니다.");
         return "redirect:/team/" + url + "/settings/manage-member";
     }
@@ -307,4 +296,5 @@ public class TeamController {
         service.remove(team);
         return "redirect:/";
     }
+
 }

@@ -1,14 +1,18 @@
 package com.lazir.lazir.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.lazir.lazir.config.Principal;
 import com.lazir.lazir.domain.Account;
+import com.lazir.lazir.domain.Team;
 import com.lazir.lazir.form.AccountForm;
 import com.lazir.lazir.form.EmailLogInForm;
 import com.lazir.lazir.form.PasswordForm;
 import com.lazir.lazir.form.ProfileForm;
 import com.lazir.lazir.repository.AccountRepository;
+import com.lazir.lazir.repository.TeamRepository;
 import com.lazir.lazir.service.AccountService;
 import com.lazir.lazir.validator.AccountValidator;
 import com.lazir.lazir.validator.EmailLogInValidator;
@@ -38,6 +42,7 @@ public class AccountController {
     private final ProfileValidator profileValidator;
     private final PasswordValidator passwordValidator;
     private final EmailLogInValidator emailValidator;
+    private final TeamRepository teamRepository;
 
     @InitBinder("accountForm")  //AccountForm요청이 들어올때 binder를 거치게된다.
     public void initBinderAccount(WebDataBinder webDataBinder){
@@ -178,7 +183,7 @@ public class AccountController {
       
         accountService.deleteAccount(account);
         attributes.addFlashAttribute("message", "탈퇴했습니다.");
-        return "redirect:/";
+        return "redirect:/logout";
     }
 
     @GetMapping("/settings/sign-out")
@@ -193,6 +198,13 @@ public class AccountController {
     public String viewMyTeam(@Principal Account account, Model model){
         if(account != null){
             model.addAttribute("account", account);
+            List<Team> memberList = teamRepository.findByMembers(account);
+            List<Team> waittingList = teamRepository.findByWaitting(account);
+            List<Team> managerList = teamRepository.findByManager(account);
+            
+            model.addAttribute("memberList", memberList);
+            model.addAttribute("waittingList", waittingList);
+            model.addAttribute("managerList", managerList);
         }
         return "account/my-team";
     }

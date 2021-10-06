@@ -1,7 +1,10 @@
 package com.lazir.lazir.controller;
 
+import java.util.List;
+
 import com.lazir.lazir.config.Principal;
 import com.lazir.lazir.domain.Account;
+import com.lazir.lazir.domain.Team;
 import com.lazir.lazir.repository.TeamRepository;
 
 import org.springframework.stereotype.Controller;
@@ -31,4 +34,9 @@ public class MainController {
         return "login";
     }
 
+    @GetMapping("/search/team")
+    public String searchTeam(String keyword, Model model){
+        List<Team> teamList = teamRepository.findByKeyword(keyword);
+        return "";
+    }
 }

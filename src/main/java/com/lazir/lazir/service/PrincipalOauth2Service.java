@@ -33,7 +33,7 @@ public class PrincipalOauth2Service extends DefaultOAuth2UserService{
 
         String provider = userRequest.getClientRegistration().getClientId();    //google
         String providerId = oAuth2User.getAttribute("sub");
-        String username = "g" + providerId;
+        String username = "g_" + providerId;
         String email = oAuth2User.getAttribute("email");
         String password = UUID.randomUUID().toString();
         log.info("google정보 : " + provider + providerId + email + password);

@@ -1,8 +1,8 @@
 package com.lazir.lazir.domain;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,14 +47,13 @@ public class Team {
     private String URL;
 
     @ManyToOne
-    @JoinColumn
     private Account manager;    //방장 account객체
 
     @ManyToMany   //조인테이블에 추가적인 데이터 변경은 일어나지 않을것 같다.
-    private Set<Account> members = new HashSet<>();   //참가자 객체
+    private List<Account> members = new ArrayList<>();   //참가자 객체
 
     @ManyToMany
-    private Set<Account> waitting = new HashSet<>();
+    private List<Account> waitting = new ArrayList<>();
 
     // @ManyToMany
     // private Set<Tag> tags = new HashSet<>();
