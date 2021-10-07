@@ -33,9 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.csrf().disable()
             .authorizeRequests()
             .mvcMatchers("/","/login","/sign-up","/check-email","/check-email",
-                        "/email-login","/check-email-login","/login-link","*","/login-by-email")
+                        "/email-login","/check-email-login","/login-link","/login-by-email","/resend-email","/board","/board/list","/search/team")
             .permitAll()  //인증없이 허용
             .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll() //get요청일때만 허용
+            //.antMatchers("/team/**").hasAuthority("ROLE_REGULAR")
+            //.antMatchers("/board/**").hasAuthority("ROLE_REGULAR")
+            .antMatchers("/create-team").hasAuthority("ROLE_REGULAR")
             .anyRequest()
             .authenticated();      //나머지는 인증 필요
             //.and()  //나머지 인증은 로그인으로 넘어가게함.

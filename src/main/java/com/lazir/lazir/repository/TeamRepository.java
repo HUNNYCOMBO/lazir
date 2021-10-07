@@ -17,7 +17,7 @@ public interface TeamRepository extends JpaRepository<Team, Long>, TeamRepositor
 
     boolean existsByURL(String url);
 
-    Team findFirst9ByPublishedAndClosedOrderByCreateTimeDesc(boolean b, boolean c);
+    List<Team> findFirst12ByPublishedAndClosedOrderByCreateTimeDesc(boolean b, boolean c);
 
     List<Team> findByMembers(Account account);
 

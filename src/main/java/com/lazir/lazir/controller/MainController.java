@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @Controller
 public class MainController {
@@ -25,7 +24,7 @@ public class MainController {
         if(account != null){
             model.addAttribute("account", account);
         }
-        model.addAttribute("teamList", teamRepository.findAll());
+        model.addAttribute("teamList", teamRepository.findFirst12ByPublishedAndClosedOrderByCreateTimeDesc(true, false));
         return "index";
     }
     
@@ -37,6 +36,8 @@ public class MainController {
     @GetMapping("/search/team")
     public String searchTeam(String keyword, Model model){
         List<Team> teamList = teamRepository.findByKeyword(keyword);
-        return "";
+        model.addAttribute("teamList", teamList);
+        model.addAttribute("keyword", keyword);
+        return "search";
     }
 }

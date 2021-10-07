@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head th:replace="fragments.html :: head"> 
+ <script src="https://code.jquery.com/jquery-3.4.1.js"   
+	integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="   
+	crossorigin="anonymous">
+</script></head>
+
+<body class="bg-light">
+    <!-- 배경 색 변경-->
+    <div th:replace="fragments :: nav"></div>
+
+	<br />
+    <div class="container-md">
+	     <br/>
+	<div>
+		<h3 th:text="${board.title}" style="margin-left:10px;"></h3>
+	</div>
+	
+	<div class="d-flex justify-content-between">
+       <div class="d-flex">
+	         글번호 :<span><i th:id="id" th:text="${board.id}"></i></span>&nbsp&nbsp
+	          작성자 :<span><i th:text="${board.account.nickname}"></i></span>&nbsp
+                  조회 :<span><i th:text="${board.count}"></i></span>
+	    </div>
+      <div class="d-flex"  style="margin-right:15px;">
+	         작성일 : <span><i th:text="${#dates.format(board.createDate, 'yyyy-MM-dd  &nbsp; HH:mm:ss')}"></i></span>
+	  </div>
+	</div>
+	  
+	<hr />
+	<div>
+		<div th:utext="${board.content}"></div>
+	</div>
+	 
+	<br/><br/>
+	<div class="d-flex justify-content-end">
+        <a href="/board/list" class="btn btn-secondary" >목록</a>&nbsp;
+	    <a th:if="${board.account.id} == ${account.id}"  th:href="@{'/board/' + ${board.id} + '/updateForm'}"class="btn btn-warning">수정</a>&nbsp;
+	    <button th:if="${board.account.id} == ${account.id}"  class="btn btn-danger" type="submit" id="btn-delete">삭제</button>
+	</div>
+	<hr />
+	
+	<div class="card" sec:authorize="hasRole('ROLE_REGULAR')">
+	    <form th:object="${board}">
+	          <input type="hidden"  th:id="boardId" th:field="*{id}">
+              <div class="card-body"><textarea class="form-control" th:id="reply_Content" rows="2"></textarea></div>
+              <div class="card-footer"><button type="button" id="btn-reply-save" class="btn btn-primary btn-sm">입력</button></div>
+	    </form>
+	</div>
+	<br />
+	<div class="card">
+	    <div class="card-header">댓글</div>
+	     <ul id="reply-box" class="list-group">
+                     <li th:each="reply : ${board.replys}"  id="reply-${reply.id}" class="list-group-item">
+                     <div class="d-flex justify-content-between"> 
+                     <div th:text="'작성자 : '+${reply.account.nickname}" class="d-flex">작성자 :</div>
+                     <div>작성일 : [[${#dates.format(reply.createDate , 'yyyy-MM-dd &nbsp; HH:mm:ss')}]]
+                     </div>
+                     </div><br>
+                     <div class="collapse.show" id="reply">
+                     <div th:text="'&nbsp;&nbsp;&nbsp;'+${reply.content}" th:id="reply-content" id="reply-content-textarea-${reply.id}" class="d-flex">내용</div>
+                     <div class="d-flex justify-content-end">
+                     <button th:onclick="index.replyDelete([[${board.id}]],[[${reply.id}]])" th:if="${reply.account.id}==${account.id}" class="btn btn-danger btn-sm">삭제</button>
+                     <div th:unless="${board.account.id} == ${account.id}"><br/></div>
+                     </div>
+              </div>
+           </li>
+        </ul>
+   </div>
+	
+  </div>
+
+
+
+        <footer th:replace="fragments.html :: footer"></footer>
+
+
+<script th:src="@{/js/board.js}" ></script>
+ 
+
+
+</body>
+</html>

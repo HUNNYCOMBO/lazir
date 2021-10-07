@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments.html :: head"></head>
+
+<body class="bg-light">
+  <!-- 배경 색 변경-->
+  <div th:replace="fragments :: nav"></div>
+
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>글수정</h2>
+    </div>
+    <div class="row justify-content-center">
+      <form class="col-sm-6" th:action="@{/board/api/} + ${board.id}" th:object="${board}">
+          <input th:id="id" type="hidden" th:field="*{id}">
+        <div class="form-group">
+          <label for="title">제목</label>
+          <input th:id="title" type="text" th:field="*{title}" class="form-control" required placeholder="title">
+          <small class="invalid-feedback">제목을 입력하세요. 공백은 허용하지 않습니다.</small>
+        </div>
+        <div class="form-group">
+          <label for="content">본문</label>
+          <textarea rows="10" th:id="content" th:field="*{content}" class="form-control summernote"></textarea>
+        </div>
+        <br>
+             <button type="submit" class="btn btn-primary"  id="btn-update">수정</button>
+      </form>
+          <div class="text-center">
+           </div>
+  </div>
+</div>
+        <footer th:replace="fragments.html :: footer"></footer>
+</body>
+
+
+<script th:src="@{/js/board.js}"></script>
+    
+</html>
