@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PrincipalOauth2Service extends DefaultOAuth2UserService{
@@ -31,18 +29,14 @@ public class PrincipalOauth2Service extends DefaultOAuth2UserService{
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String provider = userRequest.getClientRegistration().getClientId();    //google
-        String providerId = oAuth2User.getAttribute("sub");
-        String username = "g_" + providerId;
-        String email = oAuth2User.getAttribute("email");
+        String username = oAuth2User.getAttribute("sub");
+        String email = "g_" + oAuth2User.getAttribute("email");
         String password = UUID.randomUUID().toString();
-        log.info("google정보 : " + provider + providerId + email + password);
 
         account = accountRepository.findByEmail(email);
 
         if(account == null){
             account = createOauthAccount(username, email, password);
-            log.info("account 정보 : " + account.getEmail() + account.getNickname() + account.getRole());
         }
 
         return new PrincipalDetail(account, oAuth2User.getAttributes());

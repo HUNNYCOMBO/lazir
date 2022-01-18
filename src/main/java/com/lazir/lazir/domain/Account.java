@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data       //setter, getter 만들어 줌
-@EqualsAndHashCode(of = "id") // 아이디만 사용한다.
+@EqualsAndHashCode(of = "id") // 아이디만 사용한다. 성능최적화를 위해
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -70,6 +70,4 @@ public class Account {
 
     // @ManyToMany
     // private Set<Tag> tag = new HashSet<>(); 
-
-    
 }
