@@ -1,6 +1,15 @@
-# lazir
-\
-인프런 백기선님 강의 "스프링과 JPA 기반 웹 애플리케이션 개발"로 학습하며 만들었습니다.
+## 인프런 백기선님 강의 "스프링과 JPA 기반 웹 애플리케이션 개발"로 학습하며 만들었습니다.
+[백기선 - 스프링과 JPA기반 웹앱](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-JPA-%EC%9B%B9%EC%95%B1/dashboard)
+
+### 리팩토링 할 예정입니다.
+
+
+<details>
+  <summary>숨</summary> <!-- summary 아래 한칸 공백 두어야함 -->
+  
+  #### 예전 대충 만든 readme
+
+출처: https://young-cow.tistory.com/44 [어린소]
 
 ![K-001](https://user-images.githubusercontent.com/78904413/150488186-5ff0d8db-4e5e-4d7d-ae16-a51a9d94d34e.png)
 메인 페이지
@@ -35,3 +44,7 @@
 ![la4](https://user-images.githubusercontent.com/78904413/149943399-3b226f4e-d549-4dc4-8e3b-28c123ee67ad.jpg)
 ![la5](https://user-images.githubusercontent.com/78904413/149943412-ce7f6076-f7b2-4490-aa82-c57f7c69f890.jpg)
 ![la6](https://user-images.githubusercontent.com/78904413/149943442-edf99f82-9a01-4f11-a8b1-2c62fd28c91a.jpg)
+  
+  
+  
+</details>
