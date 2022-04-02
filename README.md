@@ -5,7 +5,7 @@
 
 
 <details>
-  <summary>숨</summary> <!-- summary 아래 한칸 공백 두어야함 -->
+  <summary>숨김</summary> <!-- summary 아래 한칸 공백 두어야함 -->
   
   #### 예전 대충 만든 readme
 
