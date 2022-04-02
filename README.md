@@ -5,11 +5,10 @@
 
 
 <details>
-  <summary>숨김</summary> <!-- summary 아래 한칸 공백 두어야함 -->
+  <summary>예전 내용</summary> <!-- summary 아래 한칸 공백 두어야함 -->
   
   #### 예전 대충 만든 readme
 
-출처: https://young-cow.tistory.com/44 [어린소]
 
 ![K-001](https://user-images.githubusercontent.com/78904413/150488186-5ff0d8db-4e5e-4d7d-ae16-a51a9d94d34e.png)
 메인 페이지
