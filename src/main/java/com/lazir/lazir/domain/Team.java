@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.lazir.lazir.config.PrincipalDetail;
+import com.lazir.lazir.domain.Account.Account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

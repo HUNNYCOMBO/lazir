@@ -2,8 +2,8 @@ package com.lazir.lazir.config;
 
 import javax.sql.DataSource;
 
-import com.lazir.lazir.service.PrincipalDetailService;
-import com.lazir.lazir.service.PrincipalOauth2Service;
+import com.lazir.lazir.domain.PrincipalDetailService;
+import com.lazir.lazir.domain.PrincipalOauth2Service;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

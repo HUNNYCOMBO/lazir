@@ -6,6 +6,9 @@ import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
+
+import com.lazir.lazir.domain.Account.Account;
+import com.lazir.lazir.domain.Account.Role;
 import com.querydsl.core.types.Path;
 
 

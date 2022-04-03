@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.lazir.lazir.domain.Account;
+import com.lazir.lazir.domain.Account.Account;
 
 import org.hibernate.validator.constraints.Length;
 

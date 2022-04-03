@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import com.lazir.lazir.domain.Account;
+import com.lazir.lazir.domain.Account.Account;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
