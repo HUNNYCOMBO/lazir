@@ -1,9 +1,9 @@
 package com.lazir.lazir.presentation.validator;
 
 
-import com.lazir.lazir.domain.Account.Account;
-import com.lazir.lazir.domain.Account.AccountRepository;
-import com.lazir.lazir.form.ProfileForm;
+import com.lazir.lazir.domain.account.Account;
+import com.lazir.lazir.domain.account.AccountRepository;
+import com.lazir.lazir.presentation.dto.ProfileForm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

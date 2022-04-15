@@ -11,7 +11,7 @@
         </div>
         <div class="row justify-content-center">
             <form class="col-sm-6"
-            th:action="@{/sign-up}" th:object="${accountForm}" method="POST">    <!-- 요구사항필요, account 객체를 사용해서 담음-->
+            th:action="@{/sign-up}" th:object="${signUpForm}" method="POST">    <!-- 요구사항필요, account 객체를 사용해서 담음-->
                 <div class="form-group">
                   <label for="exampleInputEmail1">이메일</label>
                   <input id="email" th:field="*{email}" type="email" class="form-control" aria-describedby="emailHelp" required placeholder="your@email.com">

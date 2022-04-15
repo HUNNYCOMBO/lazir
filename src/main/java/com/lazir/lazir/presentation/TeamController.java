@@ -4,14 +4,14 @@ import java.net.URLEncoder;
 
 import javax.validation.Valid;
 
-import com.lazir.lazir.config.Principal;
-import com.lazir.lazir.domain.Team;
-import com.lazir.lazir.domain.TeamRepository;
-import com.lazir.lazir.domain.TeamService;
-import com.lazir.lazir.domain.Account.Account;
-import com.lazir.lazir.domain.Account.AccountRepository;
-import com.lazir.lazir.form.TeamForm;
-import com.lazir.lazir.form.TeamModifyForm;
+import com.lazir.lazir.infrastructure.config.Principal;
+import com.lazir.lazir.domain.team.Team;
+import com.lazir.lazir.domain.team.TeamRepository;
+import com.lazir.lazir.domain.team.TeamService;
+import com.lazir.lazir.domain.account.Account;
+import com.lazir.lazir.domain.account.AccountRepository;
+import com.lazir.lazir.presentation.dto.TeamForm;
+import com.lazir.lazir.presentation.dto.TeamModifyForm;
 import com.lazir.lazir.presentation.validator.TeamModifyValidator;
 import com.lazir.lazir.presentation.validator.TeamValidator;
 import com.nimbusds.jose.util.StandardCharset;

@@ -1,10 +1,9 @@
 package com.lazir.lazir.presentation.validator;
 
 
-import com.lazir.lazir.domain.Account.Account;
-import com.lazir.lazir.domain.Account.AccountRepository;
-import com.lazir.lazir.domain.Account.AccountService;
-import com.lazir.lazir.form.EmailLogInForm;
+import com.lazir.lazir.domain.account.Account;
+import com.lazir.lazir.domain.account.AccountRepository;
+import com.lazir.lazir.presentation.dto.EmailLogInForm;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class EmailLogInValidator implements Validator{
     
     private final AccountRepository accountRepository;
-    private final AccountService accountService;
+    private final Account.AccountService accountService;
 
     @Override
     public boolean supports(Class<?> class1) {
@@ -34,7 +33,7 @@ public class EmailLogInValidator implements Validator{
         if(account.getProvider() != null){
             errors.rejectValue("email", "invaild.email", new Object[]{emailLogIn.getEmail()}, "소셜로그인 계정입니다.");
         }
-        if(!accountService.sendEmailColl(account)){
+        if(!account.sendEmailColl()){
             errors.rejectValue("email", "invaild.email", new Object[]{emailLogIn.getEmail()}, "이메일은 1분에 한 번 보낼수 있습니다.");
         }
     }

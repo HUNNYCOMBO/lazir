@@ -1,7 +1,7 @@
 package com.lazir.lazir.presentation.validator;
 
 
-import com.lazir.lazir.form.PasswordForm;
+import com.lazir.lazir.presentation.dto.PasswordForm;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

@@ -1,9 +1,9 @@
 package com.lazir.lazir.presentation.validator;
 
 
-import com.lazir.lazir.domain.Team;
-import com.lazir.lazir.domain.TeamRepository;
-import com.lazir.lazir.form.TeamModifyForm;
+import com.lazir.lazir.domain.team.Team;
+import com.lazir.lazir.domain.team.TeamRepository;
+import com.lazir.lazir.presentation.dto.TeamModifyForm;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

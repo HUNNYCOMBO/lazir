@@ -1,82 +1,82 @@
 package com.lazir.lazir.presentation;
 
-import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import com.lazir.lazir.config.Principal;
-import com.lazir.lazir.domain.Team;
-import com.lazir.lazir.domain.TeamRepository;
-import com.lazir.lazir.domain.Account.Account;
-import com.lazir.lazir.domain.Account.AccountRepository;
-import com.lazir.lazir.domain.Account.AccountService;
-import com.lazir.lazir.form.EmailLogInForm;
-import com.lazir.lazir.form.PasswordForm;
-import com.lazir.lazir.form.ProfileForm;
-import com.lazir.lazir.presentation.dto.SingUpRequest;
-import com.lazir.lazir.presentation.dto.SingUpResponse;
-import com.lazir.lazir.presentation.validator.AccountValidator;
-import com.lazir.lazir.presentation.validator.EmailLogInValidator;
-import com.lazir.lazir.presentation.validator.PasswordValidator;
-import com.lazir.lazir.presentation.validator.ProfileValidator;
+import com.lazir.lazir.application.AccountService;
+import com.lazir.lazir.infrastructure.config.Principal;
+import com.lazir.lazir.domain.team.Team;
+import com.lazir.lazir.domain.team.TeamRepository;
+import com.lazir.lazir.domain.account.Account;
+import com.lazir.lazir.domain.account.AccountRepository;
+import com.lazir.lazir.presentation.dto.EmailLogInForm;
+import com.lazir.lazir.presentation.dto.PasswordForm;
+import com.lazir.lazir.presentation.dto.ProfileForm;
+import com.lazir.lazir.presentation.dto.SignUpDto;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 
-// TODO 리팩토링 - restAPI
-@RestController //HTML 파일을 리턴함
+// TODO 리팩토링 - view와 API를 동시에 사용합니다.
+@Controller
 @RequiredArgsConstructor
 public class AccountController {
-    
-    private final AccountService accountService;
+
+    // presentation 영역의 객체이므로 단반향 참조가 가능.
+    private final Account.AccountService accountService;
     private final AccountRepository accountRepository;
     private final TeamRepository teamRepository;
+    private final AccountService accountService;
 
 
+    // 회원가입 get요청
     @GetMapping("/sign-up")
     public String signUpForm(Model model){
-        model.addAttribute("accountForm", new SingUpRequest());
-        //도메인 : 레포지토리에서 불러와 실제 계정처럼 사용하는 객체. 우선 도메인을 쓴다. attrilbute key를 통해 타임리프의 오브잭트로 쓸수 있다.
-        //리포지토리 : 실제 db에 접근하여 도메인객체를 저장하거나 불러오는 객체
-        //새 도메인 객체를 모델에 담아서 보낸다.
+        model.addAttribute("signUpForm", new SignUpDto.Request());
+        // 회원가입 요청 dto 객체를 보냅니다.
         return "account/sign-up";
     }
 
-    //검증해야할 다수의 객체가 있을땐 modelattribute
-    //vaild처리를 해줄 Errors 클래스.
+    // TODO initbinder 부분 -> handler로 변경
+    // 검증해야할 다수의 객체가 있을땐 modelattribute
+    // vaild 처리를 해줄 Errors 클래스.
 
+    // 회원가입 post요청 TODO JSON 리턴
+    // inline javascript를 사용해야 합니다. 객체를 json으로 자동 변환.
+    @ResponseBody
     @PostMapping("/sign-up")
-    public SingUpResponse signUpSubmit(@RequestBody @Valid SingUpRequest accountForm, Errors errors) {
+    public SignUpDto.Response signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest, Errors errors, HttpSession session) {
         if(errors.hasErrors()){
-            return new SingUpResponse();
+            // 오류가 있는 경우
+            return null;
         }
 
-      
-        return new SingUpResponse();
+        accountService.signUpAndLogin(singUpRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+        // 정상적인 경우 dto 객체를 뷰로 리턴.
     }
-    
+
+    /*
+    이메일 인증 get요청
+    */
     @GetMapping("/check-email-token")
     public String checkEmail(String token, String email, Model model){
         Account account = accountRepository.findByEmail(email);
         String view = "account/checked-email";
-        if(account == null || !account.getEmailCheckToken().equals(token)){
+        if(account == null || !account.isValidToken(token)){
             model.addAttribute("error", "인증에 실패했습니다.");
             return view;
         }
 
-        accountService.setAccountLevel(account);
-        accountService.login(account);      //이메일 확인 후 자동 로그인
+        accountService.completeSignUp(account);      //이메일 확인 후 자동 로그인
         model.addAttribute("nickname", account.getNickname());
 
         return view;
@@ -93,7 +93,7 @@ public class AccountController {
     @GetMapping("/resend-email")
     public String resendEmail(@Principal Account account, Model model){
         //db에는 cratetokendate가 반영되지않지만 persist상태이기에 작동하는것인듯.
-        if(!accountService.sendEmailColl(account)){
+        if(!account.isEnableSendEmail()){
            model.addAttribute("error", "인증 메일은 1분에 한번 전송할 수 있습니다.");
            model.addAttribute("email", account.getEmail());
            return "account/check-email";

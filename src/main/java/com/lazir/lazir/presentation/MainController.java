@@ -2,10 +2,10 @@ package com.lazir.lazir.presentation;
 
 import java.util.List;
 
-import com.lazir.lazir.config.Principal;
-import com.lazir.lazir.domain.Team;
-import com.lazir.lazir.domain.TeamRepository;
-import com.lazir.lazir.domain.Account.Account;
+import com.lazir.lazir.infrastructure.config.Principal;
+import com.lazir.lazir.domain.team.Team;
+import com.lazir.lazir.domain.team.TeamRepository;
+import com.lazir.lazir.domain.account.Account;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

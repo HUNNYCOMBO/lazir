@@ -1,13 +1,10 @@
 package com.lazir.lazir.presentation;
 
 
-import java.util.Date;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.lazir.lazir.config.Principal;
-import com.lazir.lazir.domain.Account.Account;
-import com.lazir.lazir.domain.Board.Board;
-import com.lazir.lazir.domain.Board.BoardRepository;
-import com.lazir.lazir.domain.Board.BoardService;
-import com.lazir.lazir.form.BoardForm;
+import com.lazir.lazir.infrastructure.config.Principal;
+import com.lazir.lazir.domain.account.Account;
+import com.lazir.lazir.domain.board.Board;
+import com.lazir.lazir.domain.board.BoardRepository;
+import com.lazir.lazir.domain.board.BoardService;
+import com.lazir.lazir.presentation.dto.BoardForm;
 
 import lombok.RequiredArgsConstructor;
 

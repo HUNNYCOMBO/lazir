@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lazir.lazir.config.PrincipalDetail;
-import com.lazir.lazir.domain.Reply;
-import com.lazir.lazir.domain.ResponseDto;
-import com.lazir.lazir.domain.Board.Board;
-import com.lazir.lazir.domain.Board.BoardService;
+import com.lazir.lazir.infrastructure.config.PrincipalDetail;
+import com.lazir.lazir.domain.reply.Reply;
+import com.lazir.lazir.presentation.dto.ResponseDto;
+import com.lazir.lazir.domain.board.Board;
+import com.lazir.lazir.domain.board.BoardService;
 
 @RestController
 public class BoardApiController {

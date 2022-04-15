@@ -1,8 +1,8 @@
 package com.lazir.lazir.presentation.validator;
 
 
-import com.lazir.lazir.domain.Account.AccountRepository;
-import com.lazir.lazir.presentation.dto.SingUpRequest;
+import com.lazir.lazir.domain.account.AccountRepository;
+import com.lazir.lazir.presentation.dto.SignUpDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,12 +20,12 @@ public class AccountValidator implements Validator{
 
     @Override
     public boolean supports(Class<?> class1) {
-       return class1.isAssignableFrom(SingUpRequest.class);
+       return class1.isAssignableFrom(SignUpDto.Request.class);
     }
 
     @Override
     public void validate(Object object, Errors errors) {
-        SingUpRequest accountform = (SingUpRequest)object;
+        SignUpDto.Request accountform = (SignUpDto.Request)object;
         if (accountRepository.existsByEmail(accountform.getEmail())) {
             errors.rejectValue("email", "invalid.email", new Object[]{accountform.getEmail()}, "이미 사용중인 이메일입니다.");
         }
