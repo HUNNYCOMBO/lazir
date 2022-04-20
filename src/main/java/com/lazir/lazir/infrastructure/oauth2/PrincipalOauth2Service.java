@@ -3,6 +3,8 @@ package com.lazir.lazir.infrastructure.oauth2;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.lazir.lazir.domain.account.AccountService;
+import com.lazir.lazir.domain.account.Role;
 import com.lazir.lazir.infrastructure.config.PrincipalDetail;
 import com.lazir.lazir.domain.account.Account;
 import com.lazir.lazir.domain.account.AccountRepository;
@@ -21,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PrincipalOauth2Service extends DefaultOAuth2UserService{
     
     private final AccountRepository accountRepository;
-    private final Account.AccountService accountService;
+    private final AccountService accountService;
     private Account account;
 
     @Override
@@ -39,7 +41,7 @@ public class PrincipalOauth2Service extends DefaultOAuth2UserService{
             account = createOauthAccount(username, email, password);
         }
 
-        return new PrincipalDetail(account, oAuth2User.getAttributes());
+        return new PrincipalDetail(accountService.convertToLoginDto(email), oAuth2User.getAttributes());
     }
 
     @Transactional
@@ -50,10 +52,9 @@ public class PrincipalOauth2Service extends DefaultOAuth2UserService{
             .password(password)
             .provider(username)
             .tokenCreatedTime(LocalDateTime.now())
+            .role(Role.REGULAR)
             .build();
 
-        account.setVerifiedAccount();
-        // TODO 닉네임변경시에 정회원으로 업그레이드
         accountRepository.save(account);
         return account;
     }

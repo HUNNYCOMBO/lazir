@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.lazir.lazir.application.SignUpApplicationService;
+import com.lazir.lazir.domain.account.AccountService;
 import com.lazir.lazir.infrastructure.config.Principal;
 import com.lazir.lazir.domain.team.Team;
 import com.lazir.lazir.domain.team.TeamRepository;
@@ -30,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 
     // presentation 영역의 객체이므로 단반향 참조가 가능.
-    private final Account.AccountService accountService;
+    private final AccountService accountService;
     private final AccountRepository accountRepository;
     private final TeamRepository teamRepository;
     private final SignUpApplicationService accountService;
@@ -52,7 +53,7 @@ public class AccountController {
     // inline javascript를 사용해야 합니다. 객체를 json으로 자동 변환.
     @ResponseBody
     @PostMapping("/sign-up")
-    public ResponseEntity<SignUpDto.Response> signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest, Errors errors, HttpSession session) {
+    public ResponseEntity<SignUpDto.Response> signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest, Errors errors) {
         if(errors.hasErrors()){
             // 오류가 있는 경우
             return ResponseEntity.badRequest()

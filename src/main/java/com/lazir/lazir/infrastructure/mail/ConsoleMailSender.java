@@ -19,7 +19,6 @@ public class ConsoleMailSender implements JavaMailSender{
     @Override
     public void send(SimpleMailMessage simpleMailMessage) throws MailException {
         log.info("email 토큰 확인" + simpleMailMessage.getText());
-        
     }
 
     @Override

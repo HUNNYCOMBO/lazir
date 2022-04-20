@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.lazir.lazir.domain.account.Account;
 
+import com.lazir.lazir.presentation.dto.LoginDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -17,15 +18,15 @@ import lombok.Getter;
 @Getter
 public class PrincipalDetail implements UserDetails, OAuth2User{
     // 외부계정(google)과 직접가입한 계정을 둘다 적용할 수있도록 상속받음.
-    private Account account; //컴포지션
+    private final LoginDto.Request account; //컴포지션
     private Map<String, Object> attributes;
 
     //일반로그인
-    public PrincipalDetail(Account account){
+    public PrincipalDetail(LoginDto.Request account){
         this.account = account;
     }
     //외부로그인
-    public PrincipalDetail(Account account, Map<String, Object> attributes){
+    public PrincipalDetail(LoginDto.Request account, Map<String, Object> attributes){
         this.account = account;
         this.attributes = attributes;
     }
