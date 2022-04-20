@@ -4,7 +4,7 @@ package com.lazir.lazir.presentation;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import com.lazir.lazir.application.AccountService;
+import com.lazir.lazir.application.SignUpApplicationService;
 import com.lazir.lazir.infrastructure.config.Principal;
 import com.lazir.lazir.domain.team.Team;
 import com.lazir.lazir.domain.team.TeamRepository;
@@ -15,7 +15,6 @@ import com.lazir.lazir.presentation.dto.PasswordForm;
 import com.lazir.lazir.presentation.dto.ProfileForm;
 import com.lazir.lazir.presentation.dto.SignUpDto;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +33,7 @@ public class AccountController {
     private final Account.AccountService accountService;
     private final AccountRepository accountRepository;
     private final TeamRepository teamRepository;
-    private final AccountService accountService;
+    private final SignUpApplicationService accountService;
 
 
     // 회원가입 get요청
@@ -53,14 +52,24 @@ public class AccountController {
     // inline javascript를 사용해야 합니다. 객체를 json으로 자동 변환.
     @ResponseBody
     @PostMapping("/sign-up")
-    public SignUpDto.Response signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest, Errors errors, HttpSession session) {
+    public ResponseEntity<SignUpDto.Response> signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest, Errors errors, HttpSession session) {
         if(errors.hasErrors()){
             // 오류가 있는 경우
-            return null;
+            return ResponseEntity.badRequest()
+                    .body()
         }
 
-        accountService.signUpAndLogin(singUpRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        var result = accountService.signUpAndLogin(singUpRequest);
+        var response = convertToResponse(result);
+        return ResponseEntity.ok().body(response);
+        // 정상적인 경우 dto 객체를 뷰로 리턴.
+    }
+
+    @ResponseBody
+    @PostMapping("/sign-up")
+    public SignUpDto.Response signUpSubmitAndLogin(@RequestBody @Valid SignUpDto.Request singUpRequest) {
+        var result = accountService.signUpAndLogin(singUpRequest);
+        return convertToResponse(result);
         // 정상적인 경우 dto 객체를 뷰로 리턴.
     }
 
@@ -117,10 +126,11 @@ public class AccountController {
     }
 
     @GetMapping("/settings/profile")
-    public String profileUpdateForm(@Principal Account account, Model model){
+    public GetAccountProfileResponse profileUpdateForm(@Principal Account account, Model model){
         model.addAttribute("account", account);
         model.addAttribute("profileForm", new ProfileForm(account));
-        return "settings/profile";
+        var response = convertAccountToResponse(account);
+        return response;
     }
 
     @PostMapping("/settings/profile")

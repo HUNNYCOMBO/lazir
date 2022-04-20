@@ -72,18 +72,14 @@ public class Account {
     private String location;
 
     // TODO (완)enum을 제거
-    private String role;
+    private String role;  //
 
-    // 여기까지 테이블과 매핑되는 필드
-
-
-
-    private final AccountRepository accountRepository;
-
-    @Resource
-    private final PasswordEncoder passwordEncoder;
-
-    private final JavaMailSender javaMailSender;
+    public Account(String email, String nickname, String password, String profileImage) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.profileImage = profileImage;
+    }
 
     public void createEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
@@ -93,26 +89,38 @@ public class Account {
         return this.getTokenCreatedTime().isBefore(LocalDateTime.now().minusMinutes(1));
     }
 
-    @Transactional
-    public void setVerifiedAccount() {
-        this.role = "REGULAR";
-    }
-
     public boolean isValidToken(String token){
         return this.emailCheckToken.equals(token);
     }
 
+    // ADMIN, 상위, 하위
+    public void levelUpToAdmin() {
+        // domain model paatern
+        if (createDate < 1Y) {
+            throw new IllegalStateException("어드민은 경력이 1년 이상인 회원만 가능합니다.");
+        }
+        if (role == "하위") {
+            //
+        }
 
-    // 회원 생성 메소드. sign-up POST 요청으로 받은 form객체에 기반하여 생성하고 엔티티로 변환하여 repository에 저장.
-    public Account createTempAccount(@Valid SignUpDto.Request signUpRequest) {
-        // 빌더를 통한 dto -> domain 전환
-        Account account = builder().email(signUpRequest.getEmail()).nickname(signUpRequest.getNickname())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .role("ASSOCIATE")
-                .build();
-
-        return accountRepository.save(account); // 여기까지 persist상태
+        this.role = "ADMIN";
     }
+    // 포트폴리오 만들기 - 한줄 자기소개, github link, blog link, (대표프로젝트 설명) lazir project
+
+    // Java Exception, CheckedException, UnCheckedException
+    // TODO JVM 메모리구조. GC(깊게 공부할 필요는 없고, 간단히)
+    // Java stream api vs collection framework
+    // interface default method 나온 이유
+    // Java Generic Erasure(깊게는 필요 없고, 이 단어가 왜 생겻는지, 개발 시 유의할점과 해결 방법)
+    // Java 9, 10, 11 새로나온 기능
+    // TODO spring의 트랜잭션 작동 원리, 트랜잭션 어노테이션 사용시 주의점
+    // TODO trasaction script pattern vs domain model pattern
+    // REST API & HTTP 중요한 staus, 의미
+    // TCP 3way-handshake, 4way-handshake
+
+
+
+    // jpa 영속성 컨텍스트(1차캐시), dirty checking, osiv, n + 1
 
     // 인증 메일 발송 로직, 메소드이름 변경.
     public void sendEmailForVerify(Account account) {
@@ -125,7 +133,7 @@ public class Account {
     private void setEmailCheckTokenAndTime(Account account) {
         account.createEmailCheckToken();    // 이메일 재전송하는 경우를 위해 builder에서 분리함.
         account.createTokenCreatedTime();
-        accountRepository.save(account);    // TODO save를 두번 호출해도 괜찮은지 알아볼 것.
+        // accountRepository.save(account);    // TODO save를 두번 호출해도 괜찮은지 알아볼 것.
     }
 
     private void createTokenCreatedTime() {
@@ -135,11 +143,11 @@ public class Account {
 
     // 로그인로직
     public void login(Account account) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new PrincipalDetail(account), account.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + account.getRole())));
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+//                new PrincipalDetail(account), account.getPassword(),
+//                List.of(new SimpleGrantedAuthority("ROLE_" + account.getRole())));
         // principal로 user를 상속받은 객체를 사용, password, 권한
-        SecurityContextHolder.getContext().setAuthentication(token);
+        // SecurityContextHolder.getContext().setAuthentication(token);
         // AuthenticationManager와 하는 일이 같아짐.
     }
 
