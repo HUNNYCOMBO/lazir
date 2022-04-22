@@ -76,7 +76,7 @@
 ## Project Structure
 ### Spring Boot
 > 템플릿 엔진(thymeleaf)를 이용해 객체를 담아 응답합니다. (JSON리턴 방식 X)
-  >> 이후 REST API를 알게되어 리팩토링 중에 있습니다.
+  >> 이후 REST API와 layered architecture를 알게되어 리팩토링 중에 있습니다.
 
 - 구조(리펙토링 전)
   - config: security와 project configuration을 관리합니다.
