@@ -72,6 +72,7 @@
 
 <details>
    <summary>프로젝트 구조</summary>
+  
 ## Project Structure
 ### Spring Boot
 > 템플릿 엔진(thymeleaf)를 이용해 객체를 담아 응답합니다. (JSON리턴 방식 X)
