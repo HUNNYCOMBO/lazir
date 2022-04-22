@@ -1,49 +1,55 @@
-## 인프런 백기선님 강의 "스프링과 JPA 기반 웹 애플리케이션 개발"로 학습하며 만들었습니다.
-[백기선 - 스프링과 JPA기반 웹앱](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-JPA-%EC%9B%B9%EC%95%B1/dashboard)
+## 참고
+이 프로젝트는 인프런 백기선님 강의 "스프링과 JPA 기반 웹 애플리케이션 개발"로 학습하며 만들었습니다.  
+- [백기선 - 스프링과 JPA기반 웹앱](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-JPA-%EC%9B%B9%EC%95%B1/dashboard)
 
-### 리팩토링 할 예정입니다.
+
 
 
 <details>
-  <summary>예전 내용</summary> <!-- summary 아래 한칸 공백 두어야함 -->
-  
-  #### 예전 대충 만든 readme
+  <summary>움짤로 보는 Gather Up</summary>
 
+### 움짤로 보는 동작
+#### 1. 회원가입 검증과 가입 후 자동로그인, 메일 보내기
+![gather-signupvalidate](https://user-images.githubusercontent.com/78904413/164649157-2bd03dea-7302-49cc-8eaa-71273922fae8.gif)  
+- 회원가입시 랜덤한 토큰값을 저장해서, javamailsender를 이용해 메일을 보냅니다.
+- InitBinder 어노테이션을 통해 form객체의 요청이 오면, validator 객체를 통해 중복값을 체크하거나, 같은 주소로 이메일을 많이 보내지 않게 방지합니다.
 
-![K-001](https://user-images.githubusercontent.com/78904413/150488186-5ff0d8db-4e5e-4d7d-ae16-a51a9d94d34e.png)
-메인 페이지
+#### 2. 이메일 인증과 프로필 수정
+![gather-levelup](https://user-images.githubusercontent.com/78904413/164650170-99f55038-f970-4a2d-86a2-c0dc9ad02bfa.gif)  
+- 파라미터의 token값을 통해 이메일 인증을 완료하면 정회원으로 등록되어 팀만들기와 게시판글쓰기 등의 활동이 가능해집니다.
+- password는 인코딩되어 저장됩니다.
 
-![K-002](https://user-images.githubusercontent.com/78904413/150488241-22206bd3-656c-4bb8-9213-8e730e2f152f.png)
-로그인 페이지
+##### 2.1. 이메일 인증 전 db정보
+![gather-signupdatabase](https://user-images.githubusercontent.com/78904413/164651634-cfbe5358-f6d0-4ff2-8813-fa1ce1454db4.jpg)  
 
-![K-003](https://user-images.githubusercontent.com/78904413/150488304-79c314e7-e305-4976-aa59-4b18576bff38.png)
-내 정보 페이지
+##### 2.2. 이메일 인증 후 db정보(Role의 변화)
+![gather-levelupafter](https://user-images.githubusercontent.com/78904413/164651690-4427f1c5-eec1-49e7-8be3-d041ff5bfbde.jpg)  
 
-![K-004](https://user-images.githubusercontent.com/78904413/150488340-fec2fc99-9ab7-40a3-be23-c9d9199c77fc.png)
-내 정보 수정
+#### 3. 로그인
+##### 3.1. 일반 로그인
+![gather-login](https://user-images.githubusercontent.com/78904413/164650791-b71ff1c7-b5e2-467e-a849-7d8efa66ebb9.gif)  
+- 앞서 만든 계정으로 로그인 합니다.
 
-![K-005](https://user-images.githubusercontent.com/78904413/150488383-d869063c-3256-47ff-af50-b203b48be570.png)
-팀 정보 페이지
+##### 3.2. 외부 로그인
+![gather-oauthlogin](https://user-images.githubusercontent.com/78904413/164650877-2e4b1061-faaf-4f47-9a94-17fc494e2f68.gif)  - google 계정을 통해 로그인합니다. 로그인과 동시에 회원가입 처리가 되며 자동으로 정회원으로 등록됩니다.
 
-![K-006](https://user-images.githubusercontent.com/78904413/150488407-f14f6844-6e8e-49b8-aebb-5a2c626d8c18.png)
-참가 신청 보낸 후 메세지
+#### 4. 팀
+##### 4.1. 팀 생성
+![gather-maketeam](https://user-images.githubusercontent.com/78904413/164650475-a32f52bf-9e95-4bab-bc15-85ccf3d4e53d.gif)  
+- 팀을 만들기 위한 간단한 정보를 입력하고 생성하면 해당 계정은 팀의 관리자로 등록됩니다.
+- 관리자는 모집 신청을 수락하거나 거절하는 등 팀의 설정이 가능합니다.
 
-![K-007](https://user-images.githubusercontent.com/78904413/150488471-d5396dae-0695-4dcc-9303-995c86e3c6d4.png)
-게시판crud과 댓글
+##### 4.2. 팀 가입하기
+![gather-jointeam](https://user-images.githubusercontent.com/78904413/164651226-605ba71d-9d27-410c-af03-20a80adfae7c.gif)  
+- 공개 중이며 모집 중인 팀은 가입신청이 활성화 되어 가입신청이 가능합니다.
+- 관리자 계정이 수락을 해야 팀원으로 등록되고 팀의 인원이 늘어나는 것을 확인 할 수 있습니다.
 
-![K-008](https://user-images.githubusercontent.com/78904413/150488507-8c848af1-07c3-428e-917c-766f2e33fb62.png)
-검색 페이지
+##### 4.3. 팀 상태수정
+![gather-updateteam](https://user-images.githubusercontent.com/78904413/164651897-c861dce9-7e00-4f06-8214-551628c391dd.gif) 
+- 관리자는 팀을 비공개로 하거나 모집을 중단하는 등의 상태를 변경 할 수 있습니다.
 
-![K-009](https://user-images.githubusercontent.com/78904413/150488529-02839601-d1c7-40ac-b52e-12f3d8479eec.png)
-패스워드 인코딩
-
-![la1](https://user-images.githubusercontent.com/78904413/149943348-db32ccf5-dded-4b59-a86e-15d9972f2fe3.jpg)
-![la2](https://user-images.githubusercontent.com/78904413/149943364-8434013a-1328-46ae-a558-30cbbaabd72a.jpg)
-![la3](https://user-images.githubusercontent.com/78904413/149943385-1fde936f-9766-45a7-9d0e-b6aa572df9ca.jpg)
-![la4](https://user-images.githubusercontent.com/78904413/149943399-3b226f4e-d549-4dc4-8e3b-28c123ee67ad.jpg)
-![la5](https://user-images.githubusercontent.com/78904413/149943412-ce7f6076-f7b2-4490-aa82-c57f7c69f890.jpg)
-![la6](https://user-images.githubusercontent.com/78904413/149943442-edf99f82-9a01-4f11-a8b1-2c62fd28c91a.jpg)
-  
-  
+#### 5. 게시판
+![gather-crud](https://user-images.githubusercontent.com/78904413/164675115-8b3a054a-42e8-43e3-b668-1d9b2bc9e3fa.gif)  
+- 간단한 게시판과 댓글 CRUD 입니다.
   
 </details>
